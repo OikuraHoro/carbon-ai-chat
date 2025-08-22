@@ -28,6 +28,7 @@ import { Settings } from "../framework/types";
 import { SideBar } from "./DemoSideBarNav";
 import { UserDefinedResponseExample } from "./UserDefinedResponseExample";
 import { WriteableElementExample } from "./WriteableElementExample";
+import { customLoadHistory } from "../customLoadHistory/customLoadHistory";
 
 interface AppProps {
   config: PublicConfig;
@@ -137,6 +138,17 @@ function DemoApp({ config, settings }: AppProps) {
     // Handle feedback event.
     instance.on({ type: BusEventType.FEEDBACK, handler: feedbackHandler });
 
+    // Add a custom event handler for the "Load History" option
+    instance.on({
+      type: BusEventType.SEND,
+      handler: (event: any) => {
+        if (event.data?.input?.text === "Load History (for scroll test)") {
+          // Load the history messages
+          customLoadHistory(instance);
+        }
+      },
+    });
+
     switch (settings.homescreen) {
       case "default":
         instance.updateHomeScreenConfig({
@@ -156,6 +168,9 @@ function DemoApp({ config, settings }: AppProps) {
               },
               {
                 label: "code",
+              },
+              {
+                label: "Load History (for scroll test)",
               },
             ],
           },
@@ -182,6 +197,9 @@ function DemoApp({ config, settings }: AppProps) {
               },
               {
                 label: "code",
+              },
+              {
+                label: "Load History (for scroll test)",
               },
             ],
           },
@@ -299,3 +317,5 @@ function customButtonHandler(event: any) {
 }
 
 export { DemoApp };
+
+// Made with Bob
